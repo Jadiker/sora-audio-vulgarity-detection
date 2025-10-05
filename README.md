@@ -2,9 +2,9 @@
 *TL;DR Sora doesn't check if the output audio in its videos contain vulgar language. This repo fixes that.*
 
 I've had access to Sora for two days, and have used the app for under 4 hours.
-In that time, I found that I could create outputs such as
-    * A man shouting at his wife by calling her the c-word and her crying in response.
-    * Men with lighter skin calling men with darker skin working in a field the n-word.
+In that time, I found that I could create outputs such as:
+* A man shouting at his wife by calling her the c-word and her crying in response.
+* Men with lighter skin calling men with darker skin working in a field the n-word.
 
 At its core, the issue appears to be that OpenAI/Sora does not check whether the pronunciation of names leads to vulgar terms in its output videos.
 
