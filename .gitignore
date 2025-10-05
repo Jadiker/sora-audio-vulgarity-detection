@@ -2,4 +2,5 @@ Thinking.txt
 *.mp3
 *.wav
 *.mp4
-videos/*
+!empty_example.mp4
+!example_audio.wav

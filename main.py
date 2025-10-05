@@ -74,21 +74,32 @@ def video_to_audio(video_file: str, audio_file: str):
         raise FileNotFoundError(f"Video file '{video_file}' does not exist.")
     
     # TODO this needs sanitization if used by untrusted users
-    # use ffmpeg with bitrate 160k, 2 channels, 44100 Hz frequency, no video
-    command = f"ffmpeg -i {video_file} -ab 160k -ac 2 -ar 44100 -vn {audio_file} -y -hide_banner -nostats -loglevel quiet"
-    subprocess.call(command, shell=True)
-    # check that the output file exists
+    # use ffmpeg with bitrate 160k, 2 channels, 44100 Hz frequency, no video, overwrite
+    command = f"ffmpeg -i {video_file} -ab 160k -ac 2 -ar 44100 -vn {audio_file} -y -hide_banner -nostats -loglevel error"
+
+    try:
+        res = subprocess.run(command, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(
+            f"ffmpeg failed (exit {e.returncode}) while creating '{audio_file}'.\nSTDERR:\n{e.stderr}"
+        ) from e
+
     if not Path(audio_file).exists():
-        raise FileNotFoundError(f"Audio file '{audio_file}' was not created.")
+        raise FileNotFoundError(
+            f"ffmpeg reported success but '{audio_file}' was not created."
+        )
 
 if __name__ == "__main__":
-    vulgar_phrases_file = "vulgar_phrases.txt"
-    full_filename = "james_n.mp4"
+    # Change this to test different files
+    full_filename = "empty_example.mp4"
 
     file_name = Path(full_filename).stem
     file_extension = Path(full_filename).suffix
+
     video_file = f"videos/{full_filename}"
     audio_file = f"audios/{file_name}.wav"
+
+    vulgar_phrases_file = "vulgar_phrases.txt"
     with open(vulgar_phrases_file, "r") as f:
         vulgar_phrases = [line.strip().lower() for line in f if line.strip()]
     logging.info(f"Processing file: {video_file}")
