@@ -42,7 +42,8 @@ class Transcriber:
 
     def transcribe(self, audio_file: str) -> str:
         '''Convert audio file to text using whisper.'''
-        logging.info(f"Transcribing audio with prompt: '{self.prompt}'")
+        # uncomment to see (likely vulgar) prompt
+        # logging.info(f"Transcribing audio with prompt: '{self.prompt}'")
         with self.timer.time():
             result = self.model.transcribe(
                 audio_file,
@@ -83,7 +84,7 @@ def video_to_audio(video_file: str, audio_file: str):
 if __name__ == "__main__":
     with open("vulgar_phrases.txt", "r") as f:
         vulgar_words = [line.strip().lower() for line in f if line.strip()]
-    full_filename = "emotional_c.mp4"
+    full_filename = "dum_social_n.mp4"
     file_name = Path(full_filename).stem
     file_extension = Path(full_filename).suffix
     video_file = f"videos/{full_filename}"
@@ -92,7 +93,7 @@ if __name__ == "__main__":
     video_to_audio(video_file, audio_file)
     # the prompt biases it towards hearing vulgar words
     # (some examples succeed without the prompt)
-    transcriber_prompt = f"{' '.join(vulgar_words).capitalize()}."
+    transcriber_prompt = f"{' '.join(vulgar_words)}."
     transcriber = Transcriber(prompt=transcriber_prompt)
     text = transcriber.transcribe(audio_file)
     print(text)
