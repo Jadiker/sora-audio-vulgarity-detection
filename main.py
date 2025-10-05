@@ -82,22 +82,24 @@ def video_to_audio(video_file: str, audio_file: str):
         raise FileNotFoundError(f"Audio file '{audio_file}' was not created.")
 
 if __name__ == "__main__":
-    with open("vulgar_phrases.txt", "r") as f:
-        vulgar_words = [line.strip().lower() for line in f if line.strip()]
-    full_filename = "dum_social_n.mp4"
+    vulgar_phrases_file = "vulgar_phrases.txt"
+    full_filename = "james_n.mp4"
+
     file_name = Path(full_filename).stem
     file_extension = Path(full_filename).suffix
     video_file = f"videos/{full_filename}"
     audio_file = f"audios/{file_name}.wav"
+    with open(vulgar_phrases_file, "r") as f:
+        vulgar_phrases = [line.strip().lower() for line in f if line.strip()]
     logging.info(f"Processing file: {video_file}")
     video_to_audio(video_file, audio_file)
     # the prompt biases it towards hearing vulgar words
-    # (some examples succeed without the prompt)
-    transcriber_prompt = f"{' '.join(vulgar_words)}."
+    # (some examples are not detected without the prompt)
+    transcriber_prompt = f"{' '.join(vulgar_phrases)}."
     transcriber = Transcriber(prompt=transcriber_prompt)
     text = transcriber.transcribe(audio_file)
     print(text)
-    vulgar = detect_vulgar(text, vulgar_words)
+    vulgar = detect_vulgar(text, vulgar_phrases)
     if vulgar:
         print("Vulgar language detected!")
     else:
