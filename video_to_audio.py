@@ -8,4 +8,4 @@ def video_to_audio(video_file: str, audio_file: str):
     subprocess.call(command, shell=True)
 
 if __name__ == "__main__":
-    video_to_audio("hello.mp4", "hello.mp3")
+    video_to_audio("videos/dum_n.mp4", "audios/dum_n.wav")
